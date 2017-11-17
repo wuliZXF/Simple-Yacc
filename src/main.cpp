@@ -1,11 +1,16 @@
 #include <iostream>
-#include "Symbol.h"
 #include "Production.h"
+#include "LALR.h"
 using namespace std;
 
 int main() {
-    Production production{Symbol(Symbol::Type::NON_TERMINAL, "1")};
-    production[0].symbolName = "3";
-    cout << production[0].symbolName << endl;
+    // S -> CC, C -> cC | d.
+    Grammar test{
+            Production{Symbol(Symbol::Type::NON_TERMINAL, "S"), Symbol(Symbol::Type::NON_TERMINAL, "C"), Symbol(Symbol::Type::NON_TERMINAL, "C")},
+            Production{Symbol(Symbol::Type::NON_TERMINAL, "C"), Symbol(Symbol::Type::TERMINAL, "c"), Symbol(Symbol::Type::NON_TERMINAL, "C")},
+            Production{Symbol(Symbol::Type::NON_TERMINAL, "C"), Symbol(Symbol::Type::TERMINAL, "d")}
+    };
+    LALR table(test);
+
     return 0;
 }
