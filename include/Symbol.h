@@ -14,15 +14,22 @@ struct Symbol {
     };
     Type type;
     // 非终止符可能有优先级
-    std::size_t priority;
+    std::size_t prec;
+    // l-左结合, r-右结合
+    char associative;
     std::string symbolName;
 
-    Symbol(Type type, std::string &&str, std::size_t priority=0): type(type), symbolName(std::move(str)), priority(priority) {}
-    Symbol(Type type, const std::string &str, std::size_t priority=0): type(type), symbolName(str), priority(priority) {}
+    Symbol(Type type, std::string &&str, std::size_t prec=0, char associative='l')
+            : type(type), symbolName(std::move(str)), prec(prec), associative(associative) {}
+    Symbol(Type type, const std::string &str, std::size_t prec=0, char associative='l')
+            : type(type), symbolName(str), prec(prec), associative(associative) {}
 };
 
+static const Symbol START = Symbol(Symbol::Type::NON_TERMINAL, "_S_");
 // 终止符ε
 static const Symbol EPSILON = Symbol(Symbol::Type::TERMINAL, "");
+// 终结符号
+static const Symbol TAILED = Symbol(Symbol::Type::TERMINAL, "$");
 
 inline bool operator ==(const Symbol &a, const Symbol &b) {
     return a.symbolName == b.symbolName && a.type == b.type;
