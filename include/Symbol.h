@@ -19,15 +19,17 @@ struct Symbol {
     char associative;
     std::string symbolName;
 
+    Symbol(){}
     Symbol(Type type, std::string &&str, std::size_t prec=0, char associative='l')
             : type(type), symbolName(std::move(str)), prec(prec), associative(associative) {}
     Symbol(Type type, const std::string &str, std::size_t prec=0, char associative='l')
             : type(type), symbolName(str), prec(prec), associative(associative) {}
 };
 
+// 用于增广的开始符
 static const Symbol START = Symbol(Symbol::Type::NON_TERMINAL, "_S_");
-// 终止符ε
-static const Symbol EPSILON = Symbol(Symbol::Type::TERMINAL, "");
+// ε
+static const Symbol EPSILON = Symbol(Symbol::Type::TERMINAL, "ε");
 // 终结符号
 static const Symbol TAILED = Symbol(Symbol::Type::TERMINAL, "$");
 

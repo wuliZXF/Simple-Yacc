@@ -18,7 +18,9 @@ public:
     // 最后终结符的结合性
     char associative;
 
-    Production(std::initializer_list<Symbol> list): expr(list){}
+    Production(std::initializer_list<Symbol> list): expr(list), prec(0), associative('l') {}
+    Production(std::vector<Symbol> &&expr, size_t prec = 0, char associative = 'l'): expr(std::move(expr)), prec(prec), associative(associative) {}
+    Production(const std::vector<Symbol> &expr, size_t prec = 0, char associative = 'l'): expr(expr), prec(prec), associative(associative) {}
 
     const Symbol& operator[](std::size_t n) const {
         return expr[n];
@@ -40,6 +42,14 @@ public:
         return expr.end();
     }
 
+    auto rbegin() const noexcept -> decltype(expr.rbegin()) {
+        return expr.rbegin();
+    }
+
+    auto rend() const noexcept -> decltype(expr.rend()) {
+        return expr.rend();
+    }
+
     friend bool operator <(const Production &a, const Production &b);
     friend bool operator ==(const Production &a, const Production &b);
     friend bool operator !=(const Production &a, const Production &b);
@@ -50,6 +60,7 @@ inline std::ostream& operator << (std::ostream &out, const Production &productio
     out << production[0].symbolName << " ->";
     for (auto it = production.begin() + 1; it != production.end(); ++it)
         out << ' ' << it->symbolName;
+    out << ' ' << production.prec;
     return out;
 }
 

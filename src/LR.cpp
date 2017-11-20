@@ -240,7 +240,16 @@ namespace {
 LR::LR(const Grammar &grammar) {
     extendedGrammar = Grammar{Production{START, grammar[0][0]}};   // S' -> S
     extendedGrammar.insert(extendedGrammar.end(), grammar.begin(), grammar.end());
+    // 如果产生式未规定优先级，则认为其优先级是最后一个终结符的优先级
+    for (auto &p: extendedGrammar) {
+        for (auto it = p.rbegin(); it != p.rend(); it++)
+            if (it->type == Symbol::Type::TERMINAL) {
+                if (!p.prec)
+                    p.prec = it->prec;
+                if (!p.associative)
+                    p.associative = it->associative;
+                break;
+            }
+    }
     _items(extendedGrammar, actionTable, gotoTable);
 }
-
-
