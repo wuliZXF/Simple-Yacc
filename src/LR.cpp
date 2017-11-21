@@ -225,7 +225,7 @@ namespace {
                                 throw "Not a DFA!";
                             const Production &r_p = G[t.second];
                             if (G[t.second].prec < x.prec
-                                || (G[t.second].prec == x.prec && G[t.second].associative == 'l' && x.associative == 'r')) {
+                                || (G[t.second].prec == x.prec && G[t.second].associative == 'r' && x.associative == 'r')) {
                                 t.first = 'S';
                                 t.second = (size_t)j;
                             }
@@ -238,10 +238,10 @@ namespace {
 }
 
 LR::LR(const Grammar &grammar) {
-    extendedGrammar = Grammar{Production{START, grammar[0][0]}};   // S' -> S
-    extendedGrammar.insert(extendedGrammar.end(), grammar.begin(), grammar.end());
+    augmentedGrammar = Grammar{Production{START, grammar[0][0]}};   // S' -> S
+    augmentedGrammar.insert(augmentedGrammar.end(), grammar.begin(), grammar.end());
     // 如果产生式未规定优先级，则认为其优先级是最后一个终结符的优先级
-    for (auto &p: extendedGrammar) {
+    for (auto &p: augmentedGrammar) {
         for (auto it = p.rbegin(); it != p.rend(); it++)
             if (it->type == Symbol::Type::TERMINAL) {
                 if (!p.prec)
@@ -251,5 +251,5 @@ LR::LR(const Grammar &grammar) {
                 break;
             }
     }
-    _items(extendedGrammar, actionTable, gotoTable);
+    _items(augmentedGrammar, actionTable, gotoTable);
 }

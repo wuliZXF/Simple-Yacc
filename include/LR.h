@@ -15,7 +15,7 @@ struct LR {
     std::vector<std::map<Symbol, size_t>> gotoTable;
 
     LR(const Grammar &grammar);
-    Grammar extendedGrammar;
+    Grammar augmentedGrammar;
 };
 
 #endif //YACC_LR_H

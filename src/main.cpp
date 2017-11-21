@@ -177,7 +177,7 @@ void generateAnalyzer(ofstream &out, LR &lr) {
             "static vector<map<Symbol, Action>> actionTable{";
     const auto &actionTable = lr.actionTable;
     const auto &gotoTable = lr.gotoTable;
-    const auto &extendedGrammar = lr.extendedGrammar;
+    const auto &augmentedGrammar = lr.augmentedGrammar;
     for (auto it = actionTable.begin(); it != actionTable.end(); ++it) {
         if (it != actionTable.begin())
             out << ',';
@@ -208,9 +208,9 @@ void generateAnalyzer(ofstream &out, LR &lr) {
         }
         out << '}';
     }
-    out << "};\nstatic Grammar extendedGrammar{";
-    for (auto it = extendedGrammar.begin(); it != extendedGrammar.end(); ++it) {
-        if (it != extendedGrammar.begin())
+    out << "};\nstatic Grammar augmentedGrammar{";
+    for (auto it = augmentedGrammar.begin(); it != augmentedGrammar.end(); ++it) {
+        if (it != augmentedGrammar.begin())
             out << ',';
         out << "{";
         for (auto symIt = it->begin(); symIt != it->end(); ++symIt) {
@@ -283,11 +283,11 @@ void generateAnalyzer(ofstream &out, LR &lr) {
             "\t\t\tstates.push(action.second);\n"
             "\t\t\t++it;\n"
             "\t\t} else if (action.first == 'r' && action.second) {\n"
-            "\t\t\tcout << extendedGrammar[action.second] << endl;\n"
-            "\t\t\tfor (int i = 1; i < extendedGrammar[action.second].size(); ++i)\n"
+            "\t\t\tcout << augmentedGrammar[action.second] << endl;\n"
+            "\t\t\tfor (int i = 1; i < augmentedGrammar[action.second].size(); ++i)\n"
             "\t\t\t\tstates.pop();\n"
-            "\t\t\tif (gotoTable[states.top()].count(extendedGrammar[action.second][0]))\n"
-            "\t\t\t\tstates.push(gotoTable[states.top()][extendedGrammar[action.second][0]]);\n"
+            "\t\t\tif (gotoTable[states.top()].count(augmentedGrammar[action.second][0]))\n"
+            "\t\t\t\tstates.push(gotoTable[states.top()][augmentedGrammar[action.second][0]]);\n"
             "\t\t\telse {\n"
             "\t\t\t\tcerr << \"Invalid statement.(1)\" << endl;\n"
             "\t\t\t\treturn 1;\n"
